@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html lang="it">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>Per te ❤️</title>
+
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      padding: 24px;
+      min-height: 100vh;
+      min-height: 100dvh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+
+      font-family: -apple-system, BlinkMacSystemFont,
+        "Segoe UI", sans-serif;
+
+      background:
+        radial-gradient(
+          circle at top left,
+          #ffe1e8,
+          transparent 55%
+        ),
+        linear-gradient(
+          140deg,
+          #fffaf7,
+          #fbe8ee
+        );
+
+      color: #49313d;
+    }
+
+    .card {
+      width: 100%;
+      max-width: 420px;
+      padding: 45px 30px;
+
+      background: rgba(255, 255, 255, 0.92);
+      border-radius: 28px;
+      text-align: center;
+
+      box-shadow:
+        0 20px 60px rgba(130, 60, 85, 0.13);
+    }
+
+    .cuore {
+      font-size: 55px;
+      color: #c54b72;
+      margin-bottom: 12px;
+      animation: battito 2.5s infinite ease-in-out;
+    }
+
+    .sopratitolo {
+      font-size: 11px;
+      letter-spacing: 3px;
+      color: #ac7086;
+      margin-bottom: 18px;
+    }
+
+    h1 {
+      font-size: 42px;
+      font-weight: 600;
+      margin: 0 0 22px;
+    }
+
+    .dedica {
+      font-size: 17px;
+      line-height: 1.9;
+      color: #725a65;
+      margin-bottom: 35px;
+    }
+
+    button {
+      width: 100%;
+      max-width: 290px;
+      min-height: 66px;
+
+      border: none;
+      border-radius: 50px;
+
+      background: linear-gradient(
+        135deg,
+        #b23b63,
+        #8f2d50
+      );
+
+      color: white;
+      font-size: 21px;
+      font-weight: 600;
+
+      cursor: pointer;
+      box-shadow:
+        0 10px 25px rgba(178, 59, 99, 0.25);
+
+      transition: transform 0.2s;
+    }
+
+    button:active {
+      transform: scale(0.97);
+    }
+
+    button:focus-visible {
+      outline: 3px solid #49313d;
+      outline-offset: 4px;
+    }
+
+    .messaggio {
+      min-height: 45px;
+      margin-top: 22px;
+      font-size: 14px;
+      line-height: 1.6;
+      color: #8b7280;
+    }
+
+    .firma {
+      margin-top: 25px;
+      font-size: 13px;
+      font-style: italic;
+      color: #ad8a99;
+    }
+
+    @keyframes battito {
+      0%, 100% {
+        transform: scale(1);
+      }
+
+      50% {
+        transform: scale(1.08);
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .cuore {
+        animation: none;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <main class="card">
+
+    <div class="cuore" aria-hidden="true">♥</div>
+
+    <p class="sopratitolo">
+      UNA PICCOLA SORPRESA
+    </p>
+
+    <!-- PERSONALIZZA IL TITOLO -->
+    <h1>Milagro-A Gio ❤️</h1>
+
+    <!-- PERSONALIZZA LA DEDICA -->
+    <p class="dedica">
+      So che ti piacciono regali personali più che materiali
+      <br>
+      Quindi ho pensato di dedicarti questa canzone
+      <br>
+      Questa è per te. ❤️
+    </p>
+
+    <button id="pulsante" type="button">
+      ▶ Ascolta
+    </button>
+
+    <p
+      class="messaggio"
+      id="messaggio"
+      role="status"
+      aria-live="polite"
+    >
+      Un piccolo regalo, solo per te.
+    </p>
+
+    <p class="firma">
+      Con tutto il mio cuore ♡
+    </p>
+
+    <!-- FILE AUDIO -->
+    <audio
+      id="audio"
+      src="canzone.mp3"
+      preload="auto"
+    ></audio>
+
+  </main>
+
+  <script>
+    const audio = document.getElementById("audio");
+    const pulsante = document.getElementById("pulsante");
+    const messaggio = document.getElementById("messaggio");
+
+    function aggiornaPulsante() {
+      if (audio.paused) {
+        pulsante.textContent = "▶ Ascolta";
+      } else {
+        pulsante.textContent = "⏸ Pausa";
+      }
+    }
+
+    // Quando la musica parte
+    audio.addEventListener("playing", () => {
+      aggiornaPulsante();
+      messaggio.textContent =
+        "La canzone sta suonando ❤️";
+    });
+
+    // Quando la musica viene messa in pausa
+    audio.addEventListener("pause", () => {
+      aggiornaPulsante();
+
+      if (!audio.ended) {
+        messaggio.textContent =
+          "In pausa. Premi Ascolta per continuare.";
+      }
+    });
+
+    // Quando la canzone finisce
+    audio.addEventListener("ended", () => {
+      aggiornaPulsante();
+      messaggio.textContent =
+        "Puoi riascoltarla tutte le volte che vuoi ❤️";
+    });
+
+    // Se il file audio non si carica
+    audio.addEventListener("error", () => {
+      messaggio.textContent =
+        "Impossibile caricare la canzone. " +
+        "Controlla il file canzone.mp3.";
+    });
+
+    // Pulsante per ascoltare o mettere in pausa
+    pulsante.addEventListener("click", async () => {
+      if (!audio.paused) {
+        audio.pause();
+        return;
+      }
+
+      try {
+        await audio.play();
+        aggiornaPulsante();
+      } catch (errore) {
+        messaggio.textContent =
+          "Non riesco ad avviare l'audio. " +
+          "Controlla il file e riprova.";
+      }
+    });
+
+    // Tentativo di avvio automatico
+    window.addEventListener("load", async () => {
+      try {
+        await audio.play();
+        aggiornaPulsante();
+      } catch (errore) {
+        if (!audio.error) {
+          messaggio.textContent =
+            "Se la musica non parte da sola, " +
+            "premi Ascolta qui sopra ❤️";
+        }
+      }
+    });
+  </script>
+
+</body>
+</html>
